@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chemistry Lab Inventory — Offline</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Lab Inventory (Offline)</div>
+    <div class="settings">
+      <label>Low qty threshold:
+        <input id="global-low-threshold" type="number" min="0" />
+      </label>
+      <label>Near expiry days:
+        <input id="global-near-expiry" type="number" min="0" />
+      </label>
+      <button id="save-settings" class="btn small">Save</button>
+      <button id="change-pin" class="btn small">Change PIN</button>
+    </div>
+  </header>
+
+  <!-- NAV / TABS -->
+  <nav class="tabs" id="navTabs">
+    <button class="tabbtn active" data-target="home">🏠 Home</button>
+    <button class="tabbtn" data-target="chemicals">🧪 Chemicals</button>
+    <!-- Fixed malformed button for glassware -->
+    <button class="tabbtn" data-target="glassware">⚗️ Glassware</button>
+    <button class="tabbtn" data-target="instruments">🔬 Instruments</button>
+    <button class="tabbtn" data-target="misc">📦 Miscellaneous</button>
+    <button class="tabbtn" data-target="allitems">📋 All Items</button>
+  </nav>
+
+  <main id="main">
+    <!-- HOME / CATEGORIES -->
+    <section id="home" class="view active">
+      <!-- Hero / Title area (centrally located) -->
+      <div class="home-hero">
+        <div class="hero-title">Department of Chemistry</div>
+        <div class="hero-sub">Govt. Boys' Higher Secondary School Bomai</div>
+      </div>
+
+      <!-- General search on Home (search across all categories) -->
+      <div class="panel header-row">
+        <div>
+          <input id="search-all" placeholder="Search all items (name, location, specs...)"/>
+        </div>
+      </div>
+
+      <!-- search results (hidden when empty) -->
+      <div id="home-search-results" class="panel content-area" style="display:none"></div>
+
+      <div class="cards">
+        <div class="card tile chemicals-tile" data-open="chemicals">
+          <div class="tile-icon">🧪</div>
+          <div class="tile-title">Chemicals</div>
+          <div class="tile-note">Store reagents, acids, salts</div>
+        </div>
+
+        <div class="card tile glassware-tile" data-open="glassware">
+          <div class="tile-icon">⚗️</div>
+          <div class="tile-title">Glassware</div>
+          <div class="tile-note">Beakers, flasks, pipettes</div>
+        </div>
+
+        <div class="card tile instruments-tile" data-open="instruments">
+          <div class="tile-icon">🔬</div>
+          <div class="tile-title">Instruments</div>
+          <div class="tile-note">Microscopes, meters, etc.</div>
+        </div>
+
+        <div class="card tile misc-tile" data-open="misc">
+          <div class="tile-icon">📦</div>
+          <div class="tile-title">Miscellaneous</div>
+          <div class="tile-note">Gloves, papers, fabrics</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY: CHEMICALS -->
+    <section id="chemicals" class="view">
+      <div class="panel header-row chemical-theme">
+        <div>
+          <h2>Chemicals</h2>
+          <input id="search-chemicals" placeholder="Search chemicals..." />
+        </div>
+        <div class="controls">
+          <button class="btn" id="add-chemical-btn">➕ Add Chemical</button>
+          <button class="btn" data-export="chemicals">📄 Export CSV</button>
+          <button class="btn" data-print="chemicals">🖨 Print/PDF</button>
+        </div>
+      </div>
+
+      <div id="chemicals-area" class="panel content-area">
+        <div id="chemicals-empty" class="empty">No items yet in Chemicals.</div>
+        <table id="chemicals-table" class="data-table"></table>
+      </div>
+    </section>
+
+    <!-- CATEGORY: GLASSWARE -->
+    <section id="glassware" class="view">
+      <div class="panel header-row glassware-theme">
+        <div>
+          <h2>Glassware</h2>
+          <input id="search-glassware" placeholder="Search glassware..." />
+        </div>
+        <div class="controls">
+          <button class="btn" id="add-glassware-btn">➕ Add Glassware</button>
+          <button class="btn" data-export="glassware">📄 Export CSV</button>
+          <button class="btn" data-print="glassware">🖨 Print/PDF</button>
+        </div>
+      </div>
+
+      <div id="glassware-area" class="panel content-area">
+        <div id="glassware-empty" class="empty">No items yet in Glassware.</div>
+        <table id="glassware-table" class="data-table"></table>
+      </div>
+    </section>
+
+    <!-- CATEGORY: INSTRUMENTS -->
+    <section id="instruments" class="view">
+      <div class="panel header-row instruments-theme">
+        <div>
+          <h2>Instruments</h2>
+          <input id="search-instruments" placeholder="Search instruments..." />
+        </div>
+        <div class="controls">
+          <button class="btn" id="add-instrument-btn">➕ Add Instrument</button>
+          <button class="btn" data-export="instruments">📄 Export CSV</button>
+          <button class="btn" data-print="instruments">🖨 Print/PDF</button>
+        </div>
+      </div>
+
+      <div id="instruments-area" class="panel content-area">
+        <div id="instruments-empty" class="empty">No items yet in Instruments.</div>
+        <table id="instruments-table" class="data-table"></table>
+      </div>
+    </section>
+
+    <!-- CATEGORY: MISCELLANEOUS -->
+    <section id="misc" class="view">
+      <div class="panel header-row misc-theme">
+        <div>
+          <h2>Miscellaneous</h2>
+          <input id="search-misc" placeholder="Search miscellaneous..." />
+        </div>
+        <div class="controls">
+          <button class="btn" id="add-misc-btn">➕ Add Misc Item</button>
+          <button class="btn" data-export="misc">📄 Export CSV</button>
+          <button class="btn" data-print="misc">🖨 Print/PDF</button>
+        </div>
+      </div>
+
+      <div id="misc-area" class="panel content-area">
+        <div id="misc-empty" class="empty">No items yet in Miscellaneous.</div>
+        <table id="misc-table" class="data-table"></table>
+      </div>
+    </section>
+
+    <!-- ALL ITEMS -->
+    <section id="allitems" class="view">
+      <div class="panel header-row all-theme">
+        <div>
+          <h2>All Items</h2>
+        </div>
+        <div class="controls">
+          <button class="btn" data-export="all">📄 Export CSV</button>
+          <button class="btn" data-print="all">🖨 Print/PDF</button>
+        </div>
+      </div>
+
+      <div class="panel content-area">
+        <table id="all-table" class="data-table"></table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADD / EDIT FORM MODAL (single reusable) -->
+  <div id="form-modal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-card">
+      <h3 id="form-title">Add Item</h3>
+      <form id="item-form">
+        <input type="hidden" id="item-id" />
+        <div id="form-fields"></div>
+        <div class="form-row">
+          <button type="submit" class="btn primary">Save</button>
+          <button type="button" id="cancel-form" class="btn muted">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ITEM DETAILS / IMAGE MODAL -->
+  <div id="details-modal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-card">
+      <h3 id="details-title">Item details</h3>
+      <div id="details-body"></div>
+      <div class="form-row">
+        <button id="close-details" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
